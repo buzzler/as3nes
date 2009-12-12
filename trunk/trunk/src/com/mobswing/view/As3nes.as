@@ -1,5 +1,8 @@
 package com.mobswing.view
 {
+	import com.mobswing.control.MovieClipUI;
+	import com.mobswing.model.Nes;
+	
 	import flash.display.LoaderInfo;
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -21,6 +24,9 @@ package com.mobswing.view
 		private var showsoundbuffer	:Boolean;
 		private var romSize			:int;
 		
+		private var gui				:MovieClipUI;
+		private var nes				:Nes;
+		
 		public function As3nes()
 		{
 			super();
@@ -32,6 +38,12 @@ package com.mobswing.view
 		{
 			readParam();
 			System.gc();
+			
+			this.gui = new MovieClipUI(this);
+			gui.init(false);
+			
+			Globals.movieclipMode = true;
+			Globals.memoryFlushValue = 0;
 		}
 		
 		private function onRemoved():void
