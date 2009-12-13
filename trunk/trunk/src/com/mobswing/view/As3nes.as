@@ -1,6 +1,7 @@
 package com.mobswing.view
 {
 	import com.mobswing.control.MovieClipUI;
+	import com.mobswing.model.Globals;
 	import com.mobswing.model.Nes;
 	
 	import flash.display.LoaderInfo;

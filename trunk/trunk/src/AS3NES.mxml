@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute">
-	
+<mx:Script>
+	<![CDATA[
+		import com.mobswing.view.As3nes;
+	private var as3nes:com.mobswing.view.As3nes;
+	]]>
+</mx:Script>
 </mx:Application>
