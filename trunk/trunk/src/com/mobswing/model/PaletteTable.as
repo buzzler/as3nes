@@ -6,5 +6,19 @@ package com.mobswing.model
 		{
 		}
 
+		public	function loadDefaultPalette():Boolean
+		{
+			return loadPalette("palettes/ntsc.txt");
+		}
+		
+		public	function loadNTSCPalette():Boolean
+		{
+			return loadPalette("palettes/pal.txt");
+		}
+		
+		public	function loadPalette(file:String):Boolean
+		{
+			return true;
+		}
 	}
 }

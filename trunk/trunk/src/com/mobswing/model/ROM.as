@@ -6,5 +6,9 @@ package com.mobswing.model
 		{
 		}
 
+		public	function isValid():Boolean
+		{
+			return true;
+		}
 	}
 }

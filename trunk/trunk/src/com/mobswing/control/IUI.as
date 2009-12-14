@@ -9,8 +9,8 @@ package com.mobswing.control
 	public interface IUI
 	{
 		function getNes():Nes;
-		function getJoy1():InputHandler;
-		function getJoy2():InputHandler;
+		function getJoy1():IInputHandler;
+		function getJoy2():IInputHandler;
 		function getScreenView():BufferView;
 		function getPatternView():BufferView;
 		function getSprPalView():BufferView;
@@ -28,7 +28,7 @@ package com.mobswing.control
 		function getHeight():int;
 		function getRomFileSize():int;
 		function destroy():void;
-		function printlm(str:String):void;
+		function println(str:String):void;
 		function showLoadProgress(percentComplete:int):void;
 		function showErrorMessage(msg:String):void;
 	}

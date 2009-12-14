@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()">
 <mx:Script>
 	<![CDATA[
-		import com.mobswing.view.As3nes;
+	import com.mobswing.view.As3nes;
 	private var as3nes:com.mobswing.view.As3nes;
+	private function init():void
+	{
+		as3nes = new As3nes();
+		this.uic.addChild(as3nes);
+	}
 	]]>
 </mx:Script>
+<mx:UIComponent id="uic" width="100%" height="100%"/>
 </mx:Application>

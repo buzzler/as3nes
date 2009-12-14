@@ -6,5 +6,14 @@ package com.mobswing.model
 		{
 		}
 
+		public	function putByte(value:int):Boolean
+		{
+			return true;
+		}
+
+		public	function readByte():int
+		{
+			return 0;
+		}
 	}
 }

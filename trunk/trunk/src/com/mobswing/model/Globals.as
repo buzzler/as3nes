@@ -7,11 +7,11 @@ package com.mobswing.model
 		
 		public	static const CPU_FREQ_NTSC		:Number	= 1789772.5;
 		public	static const CPU_FREQ_PAL		:Number	= 1773447.4;
-		public	static const preferredFrameRate	:int	= 60;
-		public	static const frameTime			:int	= 1000000/preferredFrameRate;
-		public	static const memoryFlushValue	:int	= 0xFF;
 		
-		public	static var memoryFlushValues	:int
+		public	static var preferredFrameRate	:int	= 60;
+		public	static var frameTime			:int	= 1000000/preferredFrameRate;
+		public	static var memoryFlushValue		:int	= 0xFF;
+		
 		public	static var movieclipMode		:Boolean= true;
 		public	static var disableSprites		:Boolean= false;
 		public	static var timeEmulation		:Boolean= true;
