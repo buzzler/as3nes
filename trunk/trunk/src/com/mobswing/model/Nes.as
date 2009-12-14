@@ -1,6 +1,7 @@
 package com.mobswing.model
 {
 	import com.mobswing.control.GameGenie;
+	import com.mobswing.control.IInputHandler;
 	import com.mobswing.control.IUI;
 	
 	public class Nes
@@ -240,27 +241,108 @@ package com.mobswing.model
 		
 		public	function loadRom(file:String):Boolean
 		{
-			return false;
+			if (isRunning())
+			{
+				stopEmulation();
+			}
+			
+			this.rom = new ROM(this);
+			this.rom.load(file);
+			if (this.rom.isValid())
+			{
+				reset();
+				
+				this.memMapper = this.rom.createMapper();
+				this.memMapper.init(this);
+				this.cpu.setMapper(memMapper);
+				this.memMapper.loadROM(this.rom);
+				this.ppu.setMirroring(this.rom.getMirroringType());
+				
+				if (this.gameGenie.getCodeCount() > 0)
+				{
+					this.memMapper.setGameGenieState(true);
+				}
+				this.romFile = file;
+			}
+			return this.rom.isValid();
 		}
 		
 		public	function reset():void
 		{
-			;
+			if (this.rom != null)
+			{
+				this.rom.closeRom();
+			}
+			if (this.memMapper != null)
+			{
+				this.memMapper.reset();
+			}
+			
+			this.cpuMem.reset();
+			this.ppuMem.reset();
+			this.sprMem.reset();
+			
+			clearCPUMemory();
+			
+			this.cpu.reset();
+			this.cpu.init();
+			this.ppu.reset();
+			this.palTable.reset();
+			this.papu.reset();
+			
+			var joy1:IInputHandler = this.gui.getJoy1();
+			if (joy1 != null)
+			{
+				joy1.reset();
+			}
 		}
 		
 		public	function enableSound(enable:Boolean):void
 		{
-			;
+			var wasRunning:Boolean = isRunning();
+			if (wasRunning)
+				stopEmulation();
+			
+			if (enable)
+				papu.start();
+			else
+				papu.stop();
+				
+			Globals.enableSound = enable;
+			
+			if (wasRunning)
+				startEmulation();
 		}
 		
 		public	function setFrameRate(rate:int):void
 		{
-			;
+			Globals.preferredFrameRate = rate;
+			Globals.frameTime = 1000000 / rate;
+			this.papu.setSampleRate(this.papu.getSampleRate(), false);
 		}
 		
 		public	function destroy():void
 		{
-			;
+			if(this.cpu!=null)		this.cpu.destroy();
+			if(this.ppu!=null)		this.ppu.destroy();
+			if(this.papu!=null)		this.papu.destroy();
+			if(this.cpuMem!=null)	this.cpuMem.destroy();
+			if(this.ppuMem!=null)	this.ppuMem.destroy();
+			if(this.sprMem!=null)	this.sprMem.destroy();
+			if(this.memMapper!=null)this.memMapper.destroy();
+			if(this.rom!=null)		this.rom.destroy();
+			
+			this.gui		= null;
+			this.cpu		= null;
+			this.ppu		= null;
+			this.papu		= null;
+			this.cpuMem		= null;
+			this.ppuMem		= null;
+			this.sprMem		= null;
+			this.memMapper	= null;
+			this.rom		= null;
+			this.gameGenie	= null;
+			this.palTable	= null;
 		}
 	}
 }

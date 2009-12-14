@@ -20,5 +20,10 @@ package com.mobswing.model
 		{
 			return true;
 		}
+		
+		public	function reset():void
+		{
+			;
+		}
 	}
 }

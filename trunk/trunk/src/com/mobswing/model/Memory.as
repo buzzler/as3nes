@@ -17,5 +17,15 @@ package com.mobswing.model
 		{
 			;
 		}
+		
+		public	function reset():void
+		{
+			;
+		}
+		
+		public	function destroy():void
+		{
+			;
+		}
 	}
 }

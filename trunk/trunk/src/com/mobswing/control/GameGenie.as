@@ -6,5 +6,9 @@ package com.mobswing.control
 		{
 		}
 
+		public	function getCodeCount():int
+		{
+			return 0;
+		}
 	}
 }

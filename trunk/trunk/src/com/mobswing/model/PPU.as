@@ -14,12 +14,27 @@ package com.mobswing.model
 			;
 		}
 		
+		public	function destroy():void
+		{
+			;
+		}
+		
+		public	function reset():void
+		{
+			;
+		}
+		
 		public	function stateLoad(buf:ByteBuffer):void
 		{
 			;
 		}
 		
 		public	function stateSave(buf:ByteBuffer):void
+		{
+			;
+		}
+		
+		public	function setMirroring(mirroring:int):void
 		{
 			;
 		}

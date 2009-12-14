@@ -19,6 +19,11 @@ package com.mobswing.model
 			;
 		}
 		
+		public	function destroy():void
+		{
+			;
+		}
+		
 		public	function writeReg(address:int, value:int):void
 		{
 			value &= 65535;
@@ -37,6 +42,21 @@ package com.mobswing.model
 		public	function isRunning():Boolean
 		{
 			return false;
+		}
+		
+		public	function reset():void
+		{
+			;
+		}
+		
+		public	function getSampleRate():int
+		{
+			return 1;
+		}
+		
+		public	function setSampleRate(rate:int,restart:Boolean):void
+		{
+			;
 		}
 	}
 }

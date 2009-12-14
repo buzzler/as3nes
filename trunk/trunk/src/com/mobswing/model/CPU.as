@@ -11,6 +11,21 @@ package com.mobswing.model
 			;
 		}
 		
+		public	function destroy():void
+		{
+			;
+		}
+		
+		public	function reset():void
+		{
+			;
+		}
+		
+		public	function setMapper(mapper:IMemoryMapper):void
+		{
+			;
+		}
+		
 		public	function stateLoad(buf:ByteBuffer):void
 		{
 			;
