@@ -8,12 +8,12 @@ package com.mobswing.view
 		
 		public function ScreenView(nes:Nes, width:int, height:int)
 		{
-			//super(nes, width, height);
+			super(nes, width, height);
 		}
 
-		public	function init():void
+		override public	function init():void
 		{
-			;
+			super.init();
 		}
 		
 		public	function setNotifyImageReady(value:Boolean):void
