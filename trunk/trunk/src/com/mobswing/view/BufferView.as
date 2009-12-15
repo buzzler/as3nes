@@ -1,5 +1,7 @@
 package com.mobswing.view
 {
+	import __AS3__.vec.Vector;
+	
 	import com.mobswing.model.Nes;
 	
 	import flash.display.BitmapData;
@@ -88,24 +90,101 @@ package com.mobswing.view
 			
 		}
 
-		public	function setFPSEnabled(value:Boolean):void
+		public	function imageReady(skipFrame:Boolean):void
 		{
 			;
 		}
 		
-		public	function useHWScaling(mode:int):Boolean
+		public	function getImage():BitmapData
 		{
-			return false;
+			return this.img;
+		}
+		
+		public	function getBuffer():Vector.<int>
+		{
+			return this.pix;
+		}
+		
+		public	function update(g:Graphics):void
+		{
+			;
+		}
+		
+		public	function scalingEnabled():Boolean
+		{
+			return scaleMode!=SCALE_NONE;
+		}
+
+		public	function getScaleMode():int
+		{
+			return this.scaleMode;
+		}
+		
+		public	function useNormalScaling():Boolean
+		{
+			return (this.scaleMode == SCALE_NORMAL);
+		}
+		
+		public	function paint(g:Graphics):void
+		{
+			;
+		}
+		
+		public	function paint_scaled(g:Graphics):void
+		{
+			;
+		}
+
+		public	function setFPSEnabled(value:Boolean):void
+		{
+			this.showFPS = value;
+		}
+		
+		public	function paintFPS(x:int, y:int, g:Graphics):void
+		{
+			;
+		}
+		
+		public	function getBufferWidth():int
+		{
+			return this._width;
+		}
+		
+		public	function getBufferHeight():int
+		{
+			return this._height;
+		}
+		
+		public	function setUsingMenu(val:Boolean):void
+		{
+			this.usingMenu = val;
+		}
+		
+		public	function useHWScaling(mode:int = -1):Boolean
+		{
+			if (mode == -1) mode = this.scaleMode;
+			return mode==SCALE_HW2X || mode==SCALE_HW3X;
 		}
 		
 		public	function getScaleModeScale(mode:int):int
 		{
-			return 0;
+			switch (mode)
+			{
+			case -1:
+				return -1;
+			case SCALE_NONE:
+				return 1;
+			case SCALE_HW3X:
+				return 3;
+			default:
+				return 2;
+			}
 		}
 		
 		public	function destroy():void
 		{
-			;
+			this.nes = null
+			this.img = null;
 		}
 	}
 }
