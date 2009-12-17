@@ -2,6 +2,10 @@ package com.mobswing.model
 {
 	public class CPU
 	{
+		public static const IRQ_NORMAL:int = 0;
+		public static const IRQ_NMI:int    = 1;
+		public static const IRQ_RESET:int  = 2;
+		
 		public function CPU(nes:Nes)
 		{
 		}
@@ -17,6 +21,11 @@ package com.mobswing.model
 		}
 		
 		public	function reset():void
+		{
+			;
+		}
+		
+		public	function requestIrq(type:int):void
 		{
 			;
 		}
