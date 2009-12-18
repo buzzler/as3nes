@@ -44,10 +44,6 @@ package com.mobswing.model
 			this.joypadLastWrite = -1;
 		}
 		
-		public function loadROM(rom:ROM):void
-		{
-		}
-		
 		public function write(address:int, value:int):void
 		{
 			if (address < 0x2000)
@@ -126,12 +122,125 @@ package com.mobswing.model
 		
 		public	function regLoad(address:int):int
 		{
+			switch (address >> 12)
+			{
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+			case 3:
+				// PPU resister
+				switch (address & 0x7)
+				{
+				case 0x0:
+					return this.cpuMem.mem[0x2000];
+				case 0x1:
+					return this.cpuMem.mem[0x2001];
+				case 0x2:
+					return this.ppu.readStatusRegister();
+				case 0x3:
+					return 0;
+				case 0x4:
+					return this.ppu.sramLoad();
+				case 0x5:
+					return 0;
+				case 0x6:
+					return 0;
+				case 0x7:
+					return this.ppu.vramLoad();
+				}
+				break;
+			case 4:
+				switch ()
+				{
+				case 0:
+					return this.nes.getPapu().readReg(address);
+				case 1:
+					return joy1Read();
+				case 2:
+					if (this.mousePressed && this.nes.ppu != null && this.nes.ppu.buffer != null)
+					{
+						var sx:int = Math.max(0, this.mouseX-4);
+						var ex:int = Math.min(256, this.mouseX+4);
+						var sy:int = Math.max(0, this.mouseY-4);
+						var ey:int = Math.min(240, this.mouseY+4);
+						var w:int = 0;
+						
+						for (var y:int = sy ; y < ey ; y++)
+						{
+							for (var x:int = sx ; x < ex ; x++)
+							{
+								if ((this.nes.ppu.buffer[(y << 8) + x] & 0xFFFFFF) == 0xFFFFFF)
+								{
+									w = 0x1 << 3;
+									break;
+								}
+							}
+						}
+						
+						w != (this.mousePressed ? (0x1<<4):0);
+						return int(joy2Read() | w);
+					}
+					else
+					{
+						return joy2Read();
+					}
+				}
+				break;
+			}
 			return 0;
 		}
 		
 		public	function regWrite(address:int, value:int):void
 		{
-			;
+			switch (address)
+			{
+			case 0x2000:
+				this.cpuMem.write(address, value);
+				this.ppu.updateControlReg1(value);
+				break;
+			case 0x2001:
+				this.cpuMem.write(address, value);
+				this.ppu.updateControlReg2(value);
+				break;
+			case 0x2003:
+				this.ppu.writeSRAMAddress(value);
+				break;
+			case 0x2004:
+				this.ppu.sramWrite(value);
+				break;
+			case 0x2005:
+				this.ppu.scrollWrite(value);
+				break;
+			case 0x2006:
+				this.ppu.writeVRAMAddress(value);
+				break;
+			case 0x2007:
+				this.ppu.vramWrite(value);
+				break;
+			case 0x4014:
+				this.ppu.sramDMA(value);
+				break;
+			case 0x4015:
+				this.nes.getPapu().writeReg(address, value);
+				break;
+			case 0x4016:
+				if (this.joypadLastWrite==1 && value ==1)
+				{
+					this.joy1StrobeState = 0;
+					this.joy2StrobeState = 0;
+				}
+				this.joypadLastWrite = value;
+				break;
+			case 0x4017:
+				this.nes.getPapu().writeReg(address, value);
+				break;
+			default:
+				if (address >= 0x4000 && address <= 0x4017)
+					this.nes.getPapu().writeReg(address, value);
+				break;
+			}
 		}
 		
 		public	function joy1Read():int

@@ -30,6 +30,61 @@ package com.mobswing.model
 			;
 		}
 		
+		public	function sramLoad():int
+		{
+			return 0;
+		}
+		
+		public	function vramLoad():int
+		{
+			return 0;
+		}
+		
+		public	function readStatusRegister():int
+		{
+			return 0;
+		}
+		
+		public	function writeSRAMAddress(address:int):void
+		{
+			;
+		}
+		
+		public	function writeVRAMAddress(address:int):void
+		{
+			;
+		}
+		
+		public	function vramWrite(value:int):void
+		{
+			;
+		}
+		
+		public	function sramDMA(value:int):void
+		{
+			;
+		}
+		
+		public	function sramWrite(value:int):void
+		{
+			;
+		}
+		
+		public	function scrollWrite(value:int):void
+		{
+			;
+		}
+		
+		public	function updateControlReg1(value:int):void
+		{
+			;
+		}
+		
+		public	function updateControlReg2(value:int):void
+		{
+			;
+		}
+		
 		public	function stateLoad(buf:ByteBuffer):void
 		{
 			;

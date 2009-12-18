@@ -24,6 +24,11 @@ package com.mobswing.model
 			;
 		}
 		
+		public	function readReg(address:int):int
+		{
+			return 0;
+		}
+		
 		public	function writeReg(address:int, value:int):void
 		{
 			value &= 65535;
