@@ -167,7 +167,7 @@ package com.mobswing.model
 		public	function clearCPUMemory():void
 		{
 			var flushval:int = Globals.memoryFlushValue;
-			for (var i:int = 0 ; 0x2000 ; i++)
+			for (var i:int = 0 ; i < 0x2000 ; i++)
 			{
 				cpuMem.mem[i] = flushval;
 			}

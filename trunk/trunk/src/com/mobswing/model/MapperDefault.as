@@ -152,7 +152,7 @@ package com.mobswing.model
 				}
 				break;
 			case 4:
-				switch ()
+				switch (address - 0x4015)
 				{
 				case 0:
 					return this.nes.getPapu().readReg(address);
@@ -510,7 +510,7 @@ package com.mobswing.model
 			return 0;
 		}
 		
-		public	function syncV(scanline:int):int{
+		public	function syncVAt(scanline:int):int{
 			return 0;
 		}
 		
