@@ -48,11 +48,11 @@ package com.mobswing.model
 		{
 			if (address < 0x2000)
 			{
-				this.cpuMem[address & 0x7FF] = value;
+				this.cpuMem.write(address & 0x7FF, value);
 			}
 			else if (address > 0x4017)
 			{
-				this.cpuMem[address] = value;
+				this.cpuMem.write(address, value);
 				if (address >= 0x6000 && address < 0x8000)
 				{
 					if (this.rom != null)
@@ -74,9 +74,9 @@ package com.mobswing.model
 		public	function writelow(address:int, value:int):void
 		{
 			if (address < 0x2000)
-				this.cpuMem[address & 0x7FF] = value;
+				this.cpuMem.write(address & 0x7FF, value);
 			else if (address > 0x4017)
-				this.cpuMem[address] = value;
+				this.cpuMem.write(address, value);
 			else if (address > 0x2007 && address < 0x4000)
 				regWrite(0x2000 + (address & 0x7), value);
 			else
@@ -97,7 +97,7 @@ package com.mobswing.model
 					}
 					else
 					{
-						if (this.cpuMem[address] == this.nes.gameGenie.getCodeCompare(this.tmp))
+						if (this.cpuMem.load(address) == this.nes.gameGenie.getCodeCompare(this.tmp))
 						{
 							return this.nes.gameGenie.getCodeValue(this.tmp);
 						}

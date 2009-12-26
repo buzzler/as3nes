@@ -4,6 +4,9 @@ package com.mobswing.model
 	import com.mobswing.control.IInputHandler;
 	import com.mobswing.control.IUI;
 	
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	
 	public class Nes
 	{
 		public	var gui			:IUI;
@@ -239,15 +242,16 @@ package com.mobswing.model
 			return this.gameGenie;
 		}
 		
-		public	function loadRom(file:String):Boolean
+		public	function loadRom(file:String):void
 		{
 			if (isRunning())
 			{
 				stopEmulation();
 			}
-			
+			this.romFile = file;
 			this.rom = new ROM(this);
 			this.rom.load(file);
+			
 			if (this.rom.isValid())
 			{
 				reset();
@@ -262,9 +266,7 @@ package com.mobswing.model
 				{
 					this.memMapper.setGameGenieState(true);
 				}
-				this.romFile = file;
 			}
-			return this.rom.isValid();
 		}
 		
 		public	function reset():void

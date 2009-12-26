@@ -7,6 +7,7 @@ package com.mobswing.control
 	import com.mobswing.view.BufferView;
 	import com.mobswing.view.ScreenView;
 	
+	import flash.display.Stage;
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
 
@@ -72,6 +73,11 @@ package com.mobswing.control
 		public function getTimer():HiResTimer
 		{
 			return this.timer;
+		}
+		
+		public function getStage():Stage
+		{
+			return this.as3nes.stage;
 		}
 		
 		public function imageReady(skipFrame:Boolean):void

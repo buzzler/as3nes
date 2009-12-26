@@ -2,6 +2,11 @@ package com.mobswing.model
 {
 	import __AS3__.vec.Vector;
 	
+	import com.mobswing.control.FilePreloader;
+	
+	import flash.net.SharedObject;
+	import flash.utils.ByteArray;
+	
 	public class ROM
 	{
 		public static const VERTICAL_MIRRORING		:int = 0;
@@ -30,7 +35,7 @@ package com.mobswing.model
 		private	var trainer		:Boolean;
 		private	var fourScreen	:Boolean;
 		private	var mapperType	:int;
-		private	var fileName	:String;
+		private var fileName	:String;
 //		private	var raFile		:RandomAccessFile;
 		private	var enableSave	:Boolean = true;
 		private var valid		:Boolean;
@@ -294,7 +299,7 @@ package com.mobswing.model
 			"Unknown Mapper",
 			"Unknown Mapper"
 		]);
-		public	static const mapperSupported:Vector.<Boolean> = Vector.<Boolean>([
+		public	static const supportedMapper:Vector.<Boolean> = Vector.<Boolean>([
 			true	,true	,true	,true	,true		,false	,false	,true	,false	,true	,
 			true	,true	,false	,false	,false		,true	,false	,false	,true	,false	,
 			false	,true	,true	,true	,false		,false	,false	,false	,false	,false	,
@@ -328,10 +333,128 @@ package com.mobswing.model
 			this.nes = nes;
 			this.valid = false;
 		}
-
+		
 		public	function load(filename:String):void
 		{
-			;
+			this.fileName = filename;
+			var i:int, j:int;
+			var ba:ByteArray = FilePreloader.getInstance().getFile('rom') as ByteArray;
+			var b:Vector.<int> = new Vector.<int>(ba.length);
+			
+			ba.position = 0;
+			for (i = 0 ; i < ba.length ; i++)
+			{
+				b[i] = ba.readByte() & 255;
+			}
+			
+			if (b == null || b.length == 0)
+			{
+				this.nes.getGui().showErrorMessage("Unable to load ROM file.");
+				this.valid = false;				
+				return;
+			}
+			
+			this.header = new Vector.<int>(16);
+			for (i = 0 ; i < 16 ; i++)
+			{
+				this.header[i] = b[i];
+			}
+			
+			var fcode:String = String.fromCharCode(b[0]) + String.fromCharCode(b[1]) + String.fromCharCode(b[2]) + String.fromCharCode(b[3]);
+			if (fcode != 'NES' + String.fromCharCode(0x1A))
+			{
+				trace("Header is incorrect.");
+				this.valid = false;
+				return;
+			}
+			
+			this.romCount	= this.header[4];
+			this.vromCount	= this.header[5] * 2;
+			this.mirroring	= ((this.header[6]&1)!=0?1:0);
+			this.batteryRam	= (this.header[6]&2)!=0;
+			this.trainer	= (this.header[6]&4)!=0;
+			this.fourScreen	= (this.header[6]&8)!=0;
+			this.mapperType	= (this.header[6]>>4)|(this.header[7]&0xF0);
+			
+			if (this.batteryRam)
+				loadBatteryRam();
+			
+			var foundError:Boolean = false;
+			for (i = 8 ; i < 16 ; i++)
+			{
+				if (this.header[i] != 0)
+				{
+					foundError = true;
+					break;
+				}
+			}
+			if (foundError)
+				this.mapperType &= 0xF;
+				
+			this.rom		= new Vector.<Vector.<int>>(this.romCount);// short[romCount][16384];
+			for (i = 0 ; i < this.romCount ; i++)
+				this.rom[i] = new Vector.<int>(16384);
+			this.vrom		= new Vector.<Vector.<int>>(this.vromCount);// short[vromCount][4096];
+			for (i = 0 ; i < this.vromCount ; i++)
+				this.vrom[i] = new Vector.<int>(4096);
+			this.vromTile	= new Vector.<Vector.<Tile>>(this.vromCount);//Tile[vromCount][256];
+			for (i = 0 ; i < this.vromCount ; i++)
+				this.vromTile[i] = new Vector.<Tile>(256);
+
+			var offset:int = 16;
+			for (i = 0 ; i < this.romCount ; i++)
+			{
+				for (j = 0 ; j < 16384 ; j++)
+				{
+					if (offset+j >= b.length)
+						break;
+					this.rom[i][j] = b[offset+j];
+				}
+				offset += 16384;
+			}
+			
+			for (i = 0 ; i < this.vromCount ; i++)
+			{
+				for (j = 0 ; j < 4096 ; j++)
+				{
+					if (offset+j >= b.length)
+						break;
+					this.vrom[i][j] = b[offset+j];
+				}
+				offset += 4096;
+			}
+			
+			for (i = 0 ; i < this.vromCount ; i++)
+			{
+				for (j = 0 ; j < 256 ; j++)
+				{
+					this.vromTile[i][j] = new Tile();
+				}
+			}
+			
+			var tileIndex:int;
+			var leftOver:int;
+			for (i = 0 ; i < this.vromCount ; i++)
+			{
+				for (j = 0 ; j < 4096 ; j++)
+				{
+					tileIndex = j >> 4;
+					leftOver = j % 16;
+					if (leftOver < 8)
+					{
+						this.vromTile[i][tileIndex].setScanline(leftOver, this.vrom[i][j], this.vrom[i][j+8]);
+					}
+					else
+					{
+						this.vromTile[i][tileIndex].setScanline(leftOver-8, this.vrom[i][j-8], this.vrom[i][j]);
+					}
+				}
+			}
+			
+			//var tempArray:ByteArray = new ByteArray(this.rom.length + this.vrom.length);
+			//this.crc32 = Crc32.encode(tempArray);
+			
+			this.valid = true;
 		}
 
 		public	function isValid():Boolean
@@ -412,8 +535,8 @@ package com.mobswing.model
 		
 		public	function mapperSupported():Boolean
 		{
-			if (this.mapperType<this.mapperSupported.length && this.mapperType>=0)
-				return this.mapperSupported[this.mapperType];
+			if (this.mapperType<supportedMapper.length && this.mapperType>=0)
+				return supportedMapper[this.mapperType];
 			return false;
 		}
 		
@@ -523,7 +646,7 @@ package com.mobswing.model
 	            }
 	        }
 			// If the mapper wasn't supported, create the standard one:
-			nes.gui.showErrorMsg("Warning: Mapper not supported yet.");
+			nes.gui.showErrorMessage("Warning: Mapper not supported yet.");
 			return new MapperDefault();
 		}
 		
@@ -547,7 +670,9 @@ package com.mobswing.model
 					this.saveRamUpToDate = true;
 					
 					// Get hex-encoded memory string from user:
-					var encodedData:String = JOptionPane.showInputDialog("Returning players insert Save Code here.");	//*******
+					//var encodedData:String = JOptionPane.showInputDialog("Returning players insert Save Code here.");	//*******
+					var so:SharedObject = SharedObject.getLocal('as3nes');
+					var encodedData:String = so.data[getFileName()];
 					if (encodedData==null)
 						return;
 					
@@ -606,7 +731,10 @@ package com.mobswing.model
 					var encodedData:String = sb.join('');
 					
 					// Send hex-encoded memory string to user:
-					JOptionPane.showInputDialog("Save Code for Resuming Game.", encodedData);
+					//JOptionPane.showInputDialog("Save Code for Resuming Game.", encodedData);
+					var so:SharedObject = SharedObject.getLocal('as3nes');
+					so.data[getFileName()] = encodedData;
+					so.flush();
 					
 					this.saveRamUpToDate = true;
 					//System.out.println("Battery RAM sent to user.");

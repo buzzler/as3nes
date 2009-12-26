@@ -1,11 +1,14 @@
 package com.mobswing.view
 {
+	import __AS3__.vec.Vector;
+	
 	import com.mobswing.control.Scale;
 	import com.mobswing.model.Nes;
 	
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	
@@ -27,8 +30,8 @@ package com.mobswing.view
 		private var gfx			:Graphics;
 		private var _width		:int;
 		private var _height		:int;
-		private var pix			:Vector.<uint>;
-		private var pix_scaled	:Vector.<uint>;
+		private var pix			:Vector.<int>;
+		private var pix_scaled	:Vector.<int>;
 		private var scaleMode	:int;
 
 		//FPS counter variables
@@ -37,7 +40,7 @@ package com.mobswing.view
 		private var fps			:String;
 		private var fpsCount	:int;
 		private var fpsFont		:TextField;
-		private var bgColor		:uint = 0xEEEEEE;
+		private var bgColor		:int = 0xEEEEEE;
 		
 		private static const mat_2x		:Matrix = new Matrix(2,0,0,2,0,0);
 		private static const mat_3x		:Matrix = new Matrix(3,0,0,3,0,0);
@@ -56,7 +59,7 @@ package com.mobswing.view
 			this.setSize(width, height);
 		}
 
-		public	function setBgColor(color:uint):void
+		public	function setBgColor(color:int):void
 		{
 			this.bgColor = color;
 		}
@@ -86,15 +89,15 @@ package com.mobswing.view
 			
 			if (!useHWScaling(this.scaleMode))
 			{
-				img = new BitmapData(this._width*scale, this._height*scale);
+				img = new BitmapData(this._width*scale, this._height*scale, false, this.bgColor);
 			}
 			else
 			{
-				img = new BitmapData(this._width, this._height);
-				vimg = new BitmapData(this._width, this._height);
+				img = new BitmapData(this._width, this._height, false, this.bgColor);
+				vimg = new BitmapData(this._width, this._height, false, this.bgColor);
 			}
 			
-			var raster:Vector.<uint> = img.getVector(img.rect);
+			var raster:Vector.<int> = convertColor32to24(img.getVector(new Rectangle(0,0, img.width, img.height)));
 			switch (this.scaleMode)
 			{
 			case SCALE_NONE:
@@ -108,15 +111,25 @@ package com.mobswing.view
 				break;
 			}
 			
-			for (var i:int = 0 ; i < raster.length ; i ++)
+			/* for (var i:int = 0 ; i < raster.length ; i ++)
 			{
 				raster[i] = this.bgColor;
-			}
+			} */
 			setSize(this._width*scale, this._height*scale);
 			setBounds(0, 0, this._width*scale, this._height*scale);
 			
 			//invalidate
 			//repaint
+		}
+		
+		private function convertColor32to24(input:Vector.<uint>):Vector.<int>
+		{
+			var ret:Vector.<int> = new Vector.<int>(input.length);
+			for (var i:int = 0 ; i < ret.length ; i++)
+			{
+				ret[i] = input[i] & 0x00FFFFFF;
+			} 
+			return ret;
 		}
 
 		public	function imageReady(skipFrame:Boolean):void
@@ -148,7 +161,7 @@ package com.mobswing.view
 			return this.img;
 		}
 		
-		public	function getBuffer():Vector.<uint>
+		public	function getBuffer():Vector.<int>
 		{
 			return this.pix;
 		}
@@ -185,6 +198,7 @@ package com.mobswing.view
 			else if (this.img != null && g != null)
 			{
 				paintFPS(0, 14, g);
+				//this.img.setVector(img.rect, this.pix);
 				g.beginBitmapFill(this.img);
 				g.drawRect(0,0,this.img.width, this.img.height);
 				g.endFill();

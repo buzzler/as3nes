@@ -1,5 +1,6 @@
 package com.mobswing.view
 {
+	import com.mobswing.control.FilePreloader;
 	import com.mobswing.control.SwfUI;
 	import com.mobswing.model.Globals;
 	import com.mobswing.model.Nes;
@@ -8,6 +9,7 @@ package com.mobswing.view
 	import flash.display.Graphics;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
+	import flash.net.URLLoaderDataFormat;
 	import flash.system.System;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -32,20 +34,32 @@ package com.mobswing.view
 		private var panelScreen		:ScreenView;
 		private var rom				:String;
 		private var progressFont	:TextField;
-		public	var bgColor			:uint	= 0x000000;
+		public	var bgColor			:int	= 0x000000;
 		private var started			:Boolean;
 		
 		public function As3nes()
 		{
 			super();
 			this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
-			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
 		}
 		
 		private	function onAdded(event:Event = null):void
 		{
 			readParam();
 			System.gc();
+			
+			var loader:FilePreloader = FilePreloader.getInstance();
+			loader.reserve('palettes/ntsc.txt', URLLoaderDataFormat.TEXT, 'ntsc');
+			loader.reserve('palettes/pal.txt', URLLoaderDataFormat.TEXT, 'pal');
+			loader.reserve(this.rom, URLLoaderDataFormat.BINARY, 'rom');
+			loader.addEventListener(Event.COMPLETE, onLoaded);
+			loader.load();
+		}
+		
+		private function onLoaded(event:Event):void
+		{
+			var loader:FilePreloader = event.target as FilePreloader;
+			loader.removeEventListener(Event.COMPLETE, onLoaded);
 			
 			this.gui = new SwfUI(this);
 			this.gui.init(false);
@@ -56,6 +70,8 @@ package com.mobswing.view
 			this.nes = this.gui.getNes();
 			this.nes.enableSound(this.sound);
 			this.nes.reset();
+			
+			this.startEmulation();
 		}
 		
 		public	function addScreenView():void
@@ -116,10 +132,10 @@ package com.mobswing.view
 		{
 			this.nes.stopEmulation();
 			this.nes.getPapu().stop();
-			this.onRemoved();
+			this.destroy();
 		}
 		
-		private function onRemoved(event:Event = null):void
+		private function destroy():void
 		{
 			if (this.nes != null && this.nes.getCpu().isRunning())
 			{
@@ -194,6 +210,8 @@ package com.mobswing.view
 			
 			tmp = info.parameters['rom'] as String;
 			if (tmp == null || tmp == '')
+				//this.rom = "roms/Kirby's Adventure.nes";
+				//this.rom = "roms/NES Test Cart.nes";
 				this.rom = "roms/Mario Bros.nes";
 			else
 				this.rom = tmp;
@@ -248,6 +266,8 @@ package com.mobswing.view
 
 			tmp = info.parameters['romsize'] as String;
 			if (tmp == null || tmp == '')
+				//this.romSize = 786448;
+				//this.romSize = 40976;
 				this.romSize = 24952;
 			else
 				this.romSize = int(parseInt(tmp));

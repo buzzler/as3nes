@@ -11,17 +11,17 @@ package com.mobswing.control
 			;
 		}
 
-		public	static function doNormalScaling(src:Vector.<uint>, dst:Vector.<uint>, changed:Vector.<Boolean>):void
+		public	static function doNormalScaling(src:Vector.<int>, dst:Vector.<int>, changed:Vector.<Boolean>):void
 		{
 			;
 		}
 		
-		public	static function doScanlineScaling(src:Vector.<uint>, dst:Vector.<uint>, changed:Vector.<Boolean>):void
+		public	static function doScanlineScaling(src:Vector.<int>, dst:Vector.<int>, changed:Vector.<Boolean>):void
 		{
 			;
 		}
 		
-		public	static function doRasterScaling(src:Vector.<uint>, dst:Vector.<uint>, changed:Vector.<Boolean>):void
+		public	static function doRasterScaling(src:Vector.<int>, dst:Vector.<int>, changed:Vector.<Boolean>):void
 		{
 			;
 		}

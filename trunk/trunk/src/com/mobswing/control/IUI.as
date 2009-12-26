@@ -4,6 +4,7 @@ package com.mobswing.control
 	import com.mobswing.model.Nes;
 	import com.mobswing.view.BufferView;
 	
+	import flash.display.Stage;
 	import flash.geom.Point;
 	
 	public interface IUI
@@ -17,6 +18,7 @@ package com.mobswing.control
 		function getImgPalView():BufferView;
 		function getNameTableView():BufferView;
 		function getTimer():HiResTimer;
+		function getStage():Stage;
 		
 		function imageReady(skipFrame:Boolean):void;
 		function init(showGui:Boolean):void;

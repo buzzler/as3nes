@@ -23,7 +23,17 @@ package com.mobswing.model
 		{
 			;
 		}
-		
+
+		public	function getLine():ISourceDataLine
+		{
+			return null;
+		}
+
+		public	function clockFrameCounter(nCycles:int):void
+		{
+			;
+		}
+
 		public	function readReg(address:int):int
 		{
 			return 0;
