@@ -30,8 +30,8 @@ package com.mobswing.view
 		private var gfx			:Graphics;
 		private var _width		:int;
 		private var _height		:int;
-		private var pix			:Vector.<int>;
-		private var pix_scaled	:Vector.<int>;
+		private var pix			:Vector.<uint>;
+		private var pix_scaled	:Vector.<uint>;
 		private var scaleMode	:int;
 
 		//FPS counter variables
@@ -57,6 +57,7 @@ package com.mobswing.view
 			this.fpsFont = new TextField();
 			this.fpsFont.autoSize = TextFieldAutoSize.LEFT;
 			this.setSize(width, height);
+			this.setBounds(0,0,width,height);
 		}
 
 		public	function setBgColor(color:int):void
@@ -97,7 +98,8 @@ package com.mobswing.view
 				vimg = new BitmapData(this._width, this._height, false, this.bgColor);
 			}
 			
-			var raster:Vector.<int> = convertColor32to24(img.getVector(new Rectangle(0,0, img.width, img.height)));
+			//var raster:Vector.<int> = convertColor32to24(img.getVector(new Rectangle(0,0, img.width, img.height)));
+			var raster:Vector.<uint> = img.getVector(img.rect);
 			switch (this.scaleMode)
 			{
 			case SCALE_NONE:
@@ -134,7 +136,7 @@ package com.mobswing.view
 
 		public	function imageReady(skipFrame:Boolean):void
 		{
-			if (skipFrame)
+			if (!skipFrame)
 			{
 				switch (this.scaleMode)
 				{
@@ -161,7 +163,7 @@ package com.mobswing.view
 			return this.img;
 		}
 		
-		public	function getBuffer():Vector.<int>
+		public	function getBuffer():Vector.<uint>
 		{
 			return this.pix;
 		}
@@ -198,7 +200,7 @@ package com.mobswing.view
 			else if (this.img != null && g != null)
 			{
 				paintFPS(0, 14, g);
-				//this.img.setVector(img.rect, this.pix);
+				this.img.setVector(img.rect, this.pix);
 				g.beginBitmapFill(this.img);
 				g.drawRect(0,0,this.img.width, this.img.height);
 				g.endFill();

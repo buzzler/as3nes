@@ -2,16 +2,15 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#FFFFFF, #F3F3F3]">
 <mx:Script>
 	<![CDATA[
+		import com.mobswing.view.ASPanel;
 	import com.mobswing.view.As3nes;
 	private var as3nes:com.mobswing.view.As3nes;
 	private function init():void
 	{
-		as3nes = new As3nes();
-		as3nes.width = 256;
-		as3nes.height = 240;
+		 as3nes = new As3nes();
 		this.uic.addChild(as3nes);
 	}
 	]]>
 </mx:Script>
-<mx:UIComponent id="uic" width="512" height="480" horizontalCenter="0" verticalCenter="0"/>
+<mx:UIComponent id="uic" width="256" height="240" horizontalCenter="0" verticalCenter="0"/>
 </mx:Application>

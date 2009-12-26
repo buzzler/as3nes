@@ -41,7 +41,7 @@ package com.mobswing.model
 			}
 		}
 		
-		public	function renderSimple(dx:int, dy:int, fBuffer:Vector.<int>, palAdd:int, palette:Vector.<int>):void
+		public	function renderSimple(dx:int, dy:int, fBuffer:Vector.<uint>, palAdd:int, palette:Vector.<int>):void
 		{
 			tIndex = 0;
 			fbIndex = (dy<<8)+dx;
@@ -52,7 +52,7 @@ package com.mobswing.model
 					palIndex = pix[tIndex];
 					if (palIndex != 0)
 					{
-						fBuffer[fbIndex] = palette[palIndex+palAdd];
+						fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
 					}
 					fbIndex++;
 					tIndex++;
@@ -62,7 +62,7 @@ package com.mobswing.model
 			}
 		}
 
-		public	function renderSmall(dx:int, dy:int, buffer:Vector.<int>, palAdd:int, palette:Vector.<int>):void
+		public	function renderSmall(dx:int, dy:int, buffer:Vector.<uint>, palAdd:int, palette:Vector.<int>):void
 		{
 			tIndex = 0;
 			fbIndex = (dy<<8)+dx;
@@ -74,7 +74,7 @@ package com.mobswing.model
 					c += (palette[pix[tIndex+1]+palAdd]>>2)&0x003F3F3F;
 					c += (palette[pix[tIndex+8]+palAdd]>>2)&0x003F3F3F;
 					c += (palette[pix[tIndex+9]+palAdd]>>2)&0x003F3F3F;
-					buffer[fbIndex] = c;
+					buffer[fbIndex] = uint(uint(c) | 0xFF000000);
 					fbIndex++;
 					tIndex+=2;
 				}
@@ -83,7 +83,7 @@ package com.mobswing.model
 			}
 		}
 		
-		public	function render(srcx1:int, srcy1:int, srcx2:int, srcy2:int, dx:int, dy:int, fBuffer:Vector.<int>, palAdd:int, palette:Vector.<int>, flipHorizontal:Boolean, flipVertical:Boolean, pri:int, priTable:Vector.<int>):void
+		public	function render(srcx1:int, srcy1:int, srcx2:int, srcy2:int, dx:int, dy:int, fBuffer:Vector.<uint>, palAdd:int, palette:Vector.<int>, flipHorizontal:Boolean, flipVertical:Boolean, pri:int, priTable:Vector.<int>):void
 		{
 			if (dx<-7 || dx>=256 || dy<-7 || dy>=240)
 			{
@@ -125,7 +125,7 @@ package com.mobswing.model
 							tpri = priTable[fbIndex];
 							if (palIndex!=0 && pri<=(tpri&0xFF))
 							{
-								fBuffer[fbIndex] = palette[palIndex+palAdd];
+								fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
 								tpri = (tpri&0xF00)|pri;
 								priTable[fbIndex] =tpri;
 							}
@@ -151,7 +151,7 @@ package com.mobswing.model
 							tpri = priTable[fbIndex];
 							if (palIndex!=0 && pri<=(tpri&0xFF))
 							{
-								fBuffer[fbIndex] = palette[palIndex+palAdd];
+								fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
 								tpri = (tpri&0xF00)|pri;
 								priTable[fbIndex] =tpri;
 							}
@@ -178,7 +178,7 @@ package com.mobswing.model
 							tpri = priTable[fbIndex];
 							if (palIndex!=0 && pri<=(tpri&0xFF))
 							{
-								fBuffer[fbIndex] = palette[palIndex+palAdd];
+								fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
 								tpri = (tpri&0xF00)|pri;
 								priTable[fbIndex] =tpri;
 							}
@@ -204,7 +204,7 @@ package com.mobswing.model
 							palIndex = pix[tIndex];
 							tpri = priTable[fbIndex];
 							if(palIndex!=0 && pri<=(tpri&0xFF)){
-								fBuffer[fbIndex] = palette[palIndex+palAdd];
+								fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
 								tpri = (tpri&0xF00)|pri;
 								priTable[fbIndex] =tpri;
 							}

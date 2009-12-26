@@ -120,21 +120,21 @@ package com.mobswing.control
 			this.kbJoy1.mapKey(KbInputHandler.KEY_A,		Keyboard.CONTROL);
 			this.kbJoy1.mapKey(KbInputHandler.KEY_B,		Keyboard.SHIFT);
 			this.kbJoy1.mapKey(KbInputHandler.KEY_START,	Keyboard.ENTER);
-			this.kbJoy1.mapKey(KbInputHandler.KEY_SELECT,Keyboard.TAB);
-			this.kbJoy1.mapKey(KbInputHandler.KEY_DOWN,	Keyboard.DOWN);
-			this.kbJoy1.mapKey(KbInputHandler.KEY_LEFT,	Keyboard.LEFT);
+			this.kbJoy1.mapKey(KbInputHandler.KEY_SELECT,	Keyboard.TAB);
+			this.kbJoy1.mapKey(KbInputHandler.KEY_DOWN,		Keyboard.DOWN);
+			this.kbJoy1.mapKey(KbInputHandler.KEY_LEFT,		Keyboard.LEFT);
 			this.kbJoy1.mapKey(KbInputHandler.KEY_RIGHT,	Keyboard.RIGHT);
-			this.kbJoy1.mapKey(KbInputHandler.KEY_UP,	Keyboard.UP);
+			this.kbJoy1.mapKey(KbInputHandler.KEY_UP,		Keyboard.UP);
 			this.vScreen.addKeyListener(this.kbJoy1);
 			
 			this.kbJoy2.mapKey(KbInputHandler.KEY_A,		Keyboard.NUMPAD_7);
 			this.kbJoy2.mapKey(KbInputHandler.KEY_B,		Keyboard.NUMPAD_9);
 			this.kbJoy2.mapKey(KbInputHandler.KEY_START,	Keyboard.NUMPAD_1);
-			this.kbJoy2.mapKey(KbInputHandler.KEY_SELECT,Keyboard.NUMPAD_3);
-			this.kbJoy2.mapKey(KbInputHandler.KEY_DOWN,	Keyboard.NUMPAD_2);
-			this.kbJoy2.mapKey(KbInputHandler.KEY_LEFT,	Keyboard.NUMPAD_4);
+			this.kbJoy2.mapKey(KbInputHandler.KEY_SELECT,	Keyboard.NUMPAD_3);
+			this.kbJoy2.mapKey(KbInputHandler.KEY_DOWN,		Keyboard.NUMPAD_2);
+			this.kbJoy2.mapKey(KbInputHandler.KEY_LEFT,		Keyboard.NUMPAD_4);
 			this.kbJoy2.mapKey(KbInputHandler.KEY_RIGHT,	Keyboard.NUMPAD_6);
-			this.kbJoy2.mapKey(KbInputHandler.KEY_UP,	Keyboard.NUMPAD_8);
+			this.kbJoy2.mapKey(KbInputHandler.KEY_UP,		Keyboard.NUMPAD_8);
 			this.vScreen.addKeyListener(this.kbJoy2);
 		}
 		

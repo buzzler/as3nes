@@ -94,12 +94,12 @@ package com.mobswing.model
 		private var address:int, b1:int, b2:int;
 
 		private var attrib			:Vector.<int> = new Vector.<int>(32);
-		private var bgbuffer		:Vector.<int> = new Vector.<int>(256*240);
+		private var bgbuffer		:Vector.<uint> = new Vector.<uint>(256*240);
 		private var pixrendered		:Vector.<int> = new Vector.<int>(256*240);
 		private var spr0dummybuffer	:Vector.<int> = new Vector.<int>(256*240);
 		private var dummyPixPriTable:Vector.<int> = new Vector.<int>(256*240);
 		private var oldFrame		:Vector.<int> = new Vector.<int>(256*240);
-		public	var buffer			:Vector.<int>;
+		public	var buffer			:Vector.<uint>;
 		private var tpix			:Vector.<int>;
 
 		public	var scanlineChanged	:Vector.<Boolean> = new Vector.<Boolean>(240);
@@ -407,7 +407,7 @@ package com.mobswing.model
 	
 		public	function startFrame():void
 		{
-			var buffer:Vector.<int> = this.nes.getGui().getScreenView().getBuffer();
+			var buffer:Vector.<uint> = this.nes.getGui().getScreenView().getBuffer();
 
 			var bgColor:int = 0;
 
@@ -442,14 +442,14 @@ package com.mobswing.model
 	
 			var i:int;
 			for (i = 0 ; i < this.buffer.length ; i++)
-				this.buffer[i] = bgColor;
+				buffer[i] = uint(uint(bgColor) | 0xFF000000);
 			for (i = 0 ; i < this.pixrendered.length ; i++)
 				this.pixrendered[i] = 65;
 		}
 	
 		public	function endFrame():void
 		{
-			var buffer:Vector.<int> = this.nes.getGui().getScreenView().getBuffer();
+			var buffer:Vector.<uint> = this.nes.getGui().getScreenView().getBuffer();
 			var i:int, x:int, y:int;
 
 			if (this.showSpr0Hit)
@@ -458,11 +458,11 @@ package com.mobswing.model
 				{
 					for (i = 0 ; i < 256 ; i++)
 					{
-						this.buffer[(this.sprY[0]<<8)+i] = 0xFF5555;
+						buffer[(this.sprY[0]<<8)+i] = 0xFFFF5555;
 					}
 					for (i = 0 ; i < 240 ; i++)
 					{
-						this.buffer[(i<<8)+this.sprX[0]] = 0xFF5555;
+						buffer[(i<<8)+this.sprX[0]] = 0xFFFF5555;
 					}
 				}
 
@@ -470,11 +470,11 @@ package com.mobswing.model
 				{
 					for(i = 0 ; i < 256 ; i++)
 					{
-						this.buffer[(this.spr0HitY<<8)+i] = 0x55FF55;
+						buffer[(this.spr0HitY<<8)+i] = 0xFF55FF55;
 					}
 					for(i = 0 ; i < 240 ; i++)
 					{
-						this.buffer[(i<<8)+this.spr0HitX] = 0x55FF55;
+						buffer[(i<<8)+this.spr0HitX] = 0xFF55FF55;
 					}
 				}
 			}
@@ -485,7 +485,7 @@ package com.mobswing.model
 				{
 					for (x = 0 ; x < 8 ; x++)
 					{
-						this.buffer[(y<<8)+x] = 0;
+						this.buffer[(y<<8)+x] = 0xFF000000;
 					}
 				}
 			}
@@ -496,7 +496,7 @@ package com.mobswing.model
 				{
 					for (x = 0 ; x < 8 ; x++)
 					{
-						this.buffer[(y<<8)+255-x] = 0;
+						buffer[(y<<8)+255-x] = 0xFF000000;
 					}
 				}
 			}
@@ -507,8 +507,8 @@ package com.mobswing.model
 				{
 					for (x = 0 ; x < 256 ; x++)
 					{
-						this.buffer[(y<<8)+x] = 0;
-						this.buffer[((239-y)<<8)+x] = 0;
+						buffer[(y<<8)+x] = 0xFF000000;
+						buffer[((239-y)<<8)+x] = 0xFF000000;
 					}
 				}
 			}
@@ -526,11 +526,11 @@ package com.mobswing.model
 					{
 						if (x >= (this.available/this.scale))
 						{
-							this.buffer[y*256+x] = 0xFFFFFF;
+							buffer[y*256+x] = 0xFFFFFFFF;
 						}
 						else
 						{
-							this.buffer[y*256+x] = 0;
+							buffer[y*256+x] = 0xFF000000;
 						}
 					}
 				}
@@ -876,7 +876,7 @@ package com.mobswing.model
 			}
 		}
 
-		private	function renderFramePartially(buffer:Vector.<int>, startScan:int, scanCount:int):void
+		private	function renderFramePartially(buffer:Vector.<uint>, startScan:int, scanCount:int):void
 		{
 			if ((this.f_spVisibility == 1) && (!Globals.disableSprites))
 			{
@@ -893,7 +893,7 @@ package com.mobswing.model
 				{
 					if (this.pixrendered[this.destIndex] > 0xFF)
 					{
-						buffer[this.destIndex] = this.bgbuffer[this.destIndex];
+						buffer[this.destIndex] = uint(uint(this.bgbuffer[this.destIndex]) | 0xFF000000);
 					}
 				}
 			}
@@ -921,19 +921,19 @@ package com.mobswing.model
 							this.scanlineChanged[i] = true;
 							break;
 						}
-						this.oldFrame[j] = buffer[j];
+						this.oldFrame[j] = int(buffer[j] & 0xFFFFFF);
 					}
 					
 					for (i = 0 ; i < jmax-j ; i++)
 					{
-						this.oldFrame[j+i] = buffer[j+i];
+						this.oldFrame[j+i] = int(buffer[j+i] & 0xFFFFFF);
 					}
 				}
 			}
 			this.validTileData = false;
 		}
 	
-		private	function renderBgScanline(buffer:Vector.<int>, scan:int):void
+		private	function renderBgScanline(buffer:Vector.<uint>, scan:int):void
 		{
 			this.baseTile	= (this.regS==0?0:256);
 			this.destIndex	= (scan<<8)-this.regFH;
@@ -943,7 +943,7 @@ package com.mobswing.model
 			this.cntH	= this.regH;
 			this.curNt	= this.ntable1[this.cntV+this.cntV+this.cntH];
 	
-			if(scan<240 && (scan-this.cntFV)>=0)
+			if (scan<240 && (scan-this.cntFV)>=0)
 			{
 				this.tscanoffset = this.cntFV<<3;
 				y = scan-this.cntFV;
@@ -979,7 +979,7 @@ package com.mobswing.model
 							{
 								for ( ; this.sx < 8 ; this.sx++)
 								{
-									buffer[this.destIndex] = this.imgPalette[this.tpix[this.tscanoffset+this.sx]+this.att];
+									buffer[this.destIndex] = uint(uint(this.imgPalette[this.tpix[this.tscanoffset+this.sx]+this.att]) | 0xFF000000);
 									this.pixrendered[this.destIndex] |= 256;
 									this.destIndex++;
 								}
@@ -991,14 +991,13 @@ package com.mobswing.model
 									this.col = this.tpix[this.tscanoffset + this.sx];
 									if (this.col != 0)
 									{
-										buffer[this.destIndex] = this.imgPalette[this.col+this.att];
+										buffer[this.destIndex] = uint(uint(this.imgPalette[this.col+this.att]) | 0xFF000000);
 										this.pixrendered[this.destIndex] |= 256;
 									}
 									this.destIndex++;
 								}
 							}
 						}
-	
 					}
 	
 					cntHT++;
@@ -1272,7 +1271,7 @@ package com.mobswing.model
 		public	function renderPattern():void
 		{
 			var scr:BufferView = nes.getGui().getPatternView();
-			var buffer:Vector.<int> = scr.getBuffer();
+			var buffer:Vector.<uint> = scr.getBuffer();
 	
 			var tIndex:int = 0;
 			for (var j:int = 0 ; j < 2 ; j++)
@@ -1291,7 +1290,7 @@ package com.mobswing.model
 
 		public	function renderNameTables():void
 		{
-			var buffer:Vector.<int> = nes.getGui().getNameTableView().getBuffer();
+			var buffer:Vector.<uint> = nes.getGui().getNameTableView().getBuffer();
 			if (f_bgPatternTable == 0)
 			{
 				baseTile = 0;
@@ -1357,14 +1356,14 @@ package com.mobswing.model
 		private	function renderPalettes():void
 		{
 			var i:int, x:int, y:int;
-			var buffer:Vector.<int> = nes.getGui().getImgPalView().getBuffer();
+			var buffer:Vector.<uint> = nes.getGui().getImgPalView().getBuffer();
 			for (i = 0 ; i < 16 ; i++)
 			{
 				for (y = 0 ; y < 16 ; y++)
 				{
 					for(x = 0 ; x < 16 ; x++)
 					{
-						buffer[y*256+i*16+x] = imgPalette[i];
+						buffer[y*256+i*16+x] = uint(uint(imgPalette[i]) | 0xFF000000);
 					}
 				}
 			}
@@ -1376,7 +1375,7 @@ package com.mobswing.model
 				{
 					for (x = 0 ; x < 16 ; x++)
 					{
-						buffer[y*256+i*16+x] = sprPalette[i];
+						buffer[y*256+i*16+x] = uint(uint(sprPalette[i]) | 0xFF000000);
 					}
 				}
 			}
@@ -1635,7 +1634,7 @@ package com.mobswing.model
 
 				for (i = 0 ; i < bgbuffer.length ; i++)
 				{
-					bgbuffer[i] = buf.readByte();
+					bgbuffer[i] = buf.readByte() | 0xFF000000;
 				}
 				for (i = 0 ; i < pixrendered.length ; i++)
 				{
@@ -1707,7 +1706,7 @@ package com.mobswing.model
 	
 			for (i = 0 ; i < bgbuffer.length ; i++)
 			{
-				buf.putByte(bgbuffer[i]);
+				buf.putByte(bgbuffer[i] & 0xFFFFFF);
 			}
 			for (i = 0 ; i < pixrendered.length ; i++)
 			{

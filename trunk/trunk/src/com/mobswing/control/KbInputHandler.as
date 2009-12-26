@@ -1,6 +1,11 @@
 package com.mobswing.control
 {
+	import __AS3__.vec.Vector;
+	
 	import com.mobswing.model.Nes;
+	
+	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 	
 	public class KbInputHandler implements IInputHandler
 	{
@@ -13,10 +18,10 @@ package com.mobswing.control
 		public	static const KEY_DOWN	:int = 5;
 		public	static const KEY_LEFT	:int = 6;
 		public	static const KEY_RIGHT	:int = 7;
-		
-		// Key count:
 		public	static const NUM_KEYS	:int = 8;
 
+		private var allKeysState:Vector.<Boolean>;
+    	private var keyMapping:Vector.<int>;
 		private var nes:Nes;
 		private var id:int;
 
@@ -24,29 +29,99 @@ package com.mobswing.control
 		{
 			this.nes = nes;
 			this.id = id;
+			this.allKeysState = new Vector.<Boolean>(255);
+			this.keyMapping = new Vector.<int>(NUM_KEYS);
 		}
 		
-		public	function destroy():void
-		{
-			this.nes = null;
-		}
 
 		public function getKeyState(padKey:int):int
 		{
-			return 0;
+			return this.allKeysState[keyMapping[padKey]] ? 0x41 : 0x40;
 		}
 		
 		public function mapKey(padKey:int, deviceKey:int):void
 		{
+			this.keyMapping[padKey] = deviceKey;
 		}
-		
+
+		public	function keyPressed(ke:KeyboardEvent):void
+		{
+	
+	        var kc:int = ke.keyCode;
+	        if (kc >= allKeysState.length)
+	        {
+	            return;
+	        }
+	
+	        allKeysState[kc] = true;
+	
+	        if (kc == keyMapping[KEY_LEFT])
+	        {
+	            allKeysState[keyMapping[KEY_RIGHT]] = false;
+	        }
+	        else if (kc == keyMapping[KEY_RIGHT])
+	        {
+	            allKeysState[keyMapping[KEY_LEFT]] = false;
+	        }
+	        else if (kc == keyMapping[KEY_UP])
+	        {
+	            allKeysState[keyMapping[KEY_DOWN]] = false;
+	        }
+	        else if (kc == keyMapping[KEY_DOWN])
+	        {
+	            allKeysState[keyMapping[KEY_UP]] = false;
+	        }
+	    }
+	
+	    public	function keyReleased(ke:KeyboardEvent):void
+	    {
+	        var kc:int = ke.keyCode;
+	        if (kc >= allKeysState.length)
+	        {
+	            return;
+	        }
+	
+	        allKeysState[kc] = false;
+	
+	        if (id == 0)
+	        {
+	            switch (kc)
+	            {
+                case Keyboard.F5:
+                    // Reset game:
+                    if (nes.isRunning())
+                    {
+                        nes.stopEmulation();
+                        nes.reset();
+                        nes.reloadRom();
+                        nes.startEmulation();
+                    }
+                    break;
+                case Keyboard.F10:
+                    // Just using this to display the battery RAM contents to user.
+                    if (nes.rom != null)
+                    {
+                        nes.rom.closeRom();
+                    }
+                    break;
+	            }
+	        }
+	
+	    }
+
 		public function reset():void
 		{
+			this.allKeysState = new Vector.<Boolean>(255);
 		}
 		
 		public function update():void
 		{
 		}
-		
+
+		public	function destroy():void
+		{
+			this.nes = null;
+		}
+
 	}
 }
