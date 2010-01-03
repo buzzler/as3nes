@@ -16,6 +16,7 @@ package com.mobswing.view
 
 	public class As3nes extends Sprite implements IUI
 	{
+		private var sm				:Stage;
 		private var nes				:Nes;
 		private var timer			:HiResTimer;
 		private var kbJoy1			:KbInputHandler;
@@ -27,10 +28,10 @@ package com.mobswing.view
 		private var sleepTime:int;
 		private var t1:Number, t2:Number;
 		
-		public function As3nes()
+		public function As3nes(sm:Stage)
 		{
 			super();
-
+			this.sm = sm;
 			this.graphics.beginFill(0x0);
 			this.graphics.drawRect(0,0,Globals.WIDTH, Globals.HEIGHT);
 			this.graphics.endFill();
@@ -80,6 +81,11 @@ package com.mobswing.view
 				trace("AS3NES was unable to open this cartridge.");
 			}
 		}
+		
+		public	function get isRunning():Boolean
+		{
+			return this.started;
+		}
 
 		public function getNes():Nes
 		{
@@ -103,7 +109,8 @@ package com.mobswing.view
 		
 		public function getStage():Stage
 		{
-			return this.stage;
+			//return this.stage;
+			return sm;
 		}
 		
 		public function imageReady(skipFrame:Boolean):void
@@ -200,7 +207,11 @@ package com.mobswing.view
 			{
 				stopEmulation();
 			}
-			if (this.panelScreen) this.panelScreen.destroy();
+			if (this.panelScreen)
+			{
+				this.panelScreen.destroy();
+				this.removeChild(this.panelScreen);
+			}
 			if (this.kbJoy1) this.kbJoy1.destroy();
 			if (this.kbJoy2) this.kbJoy2.destroy();
 			if (this.nes != null) this.nes.destroy();
@@ -213,7 +224,7 @@ package com.mobswing.view
 			this.panelScreen= null;
 			this.timer	= null;
 			
-			System.exit(0);
+//			System.exit(0);
 			System.gc();
 		}
 	}

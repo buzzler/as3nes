@@ -89,10 +89,6 @@ package com.mobswing.control
 			this.allKeysState = new Vector.<Boolean>(255);
 		}
 		
-		public function update():void
-		{
-		}
-
 		public	function destroy():void
 		{
 			this.nes = null;

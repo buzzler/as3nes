@@ -98,9 +98,9 @@ package com.mobswing.model
 				for (var i:int = 0 ; i < 64 ; i++)
 				{
 					col = origTable[i];
-					r = (int)(getRed(col) * rFactor);
-					g = (int)(getGreen(col) * gFactor);
-					b = (int)(getBlue(col) * bFactor);
+					r = int(getRed(col) * rFactor);
+					g = int(getGreen(col) * gFactor);
+					b = int(getBlue(col) * bFactor);
 					emphTable[emph][i] = getRgb(r,g,b);
 				}
 			}

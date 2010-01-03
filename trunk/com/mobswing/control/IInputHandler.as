@@ -5,6 +5,5 @@ package com.mobswing.control
 		function getKeyState(padKey:int):int;
 		function mapKey(padKey:int, deviceKey:int):void;
 		function reset():void;
-		function update():void;
 	}
 }
