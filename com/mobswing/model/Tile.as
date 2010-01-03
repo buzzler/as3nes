@@ -75,7 +75,8 @@ package com.mobswing.model
 							tpri = priTable[fbIndex];
 							if (palIndex!=0 && pri<=(tpri&0xFF))
 							{
-								fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
+								//fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
+								fBuffer[fbIndex] = palette[palIndex+palAdd];
 								tpri = (tpri&0xF00)|pri;
 								priTable[fbIndex] =tpri;
 							}
@@ -101,7 +102,8 @@ package com.mobswing.model
 							tpri = priTable[fbIndex];
 							if (palIndex!=0 && pri<=(tpri&0xFF))
 							{
-								fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
+								//fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
+								fBuffer[fbIndex] = palette[palIndex+palAdd];
 								tpri = (tpri&0xF00)|pri;
 								priTable[fbIndex] =tpri;
 							}
@@ -128,7 +130,8 @@ package com.mobswing.model
 							tpri = priTable[fbIndex];
 							if (palIndex!=0 && pri<=(tpri&0xFF))
 							{
-								fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
+								//fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
+								fBuffer[fbIndex] = palette[palIndex+palAdd];
 								tpri = (tpri&0xF00)|pri;
 								priTable[fbIndex] =tpri;
 							}
@@ -153,8 +156,10 @@ package com.mobswing.model
 						{
 							palIndex = pix[tIndex];
 							tpri = priTable[fbIndex];
-							if(palIndex!=0 && pri<=(tpri&0xFF)){
-								fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
+							if(palIndex!=0 && pri<=(tpri&0xFF))
+							{
+								//fBuffer[fbIndex] = uint(uint(palette[palIndex+palAdd]) | 0xFF000000);
+								fBuffer[fbIndex] = palette[palIndex+palAdd];
 								tpri = (tpri&0xF00)|pri;
 								priTable[fbIndex] =tpri;
 							}

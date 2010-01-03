@@ -32,7 +32,7 @@ package com.mobswing.model
 		public static const IRQ_NMI:int    = 1;
 		public static const IRQ_RESET:int  = 2;
 		
-		public	var irqRequested	:Boolean;
+		private	var irqRequested	:Boolean;
 		private	var irqType			:int;
 	
 		private	var opdata			:Vector.<int>;
@@ -182,8 +182,40 @@ package com.mobswing.model
 			{
 				endExcution();
 			}
+			this.stopRunning = false;
+			
+			this.mem = this.nes.getCpuMemory().mem;
 	
-			run();
+			this.ppu		= this.nes.getPpu();
+			this.papu		= this.nes.getPapu();
+
+			this.REG_ACC	= this.REG_ACC_NEW;
+			this.REG_X		= this.REG_X_NEW;
+			this.REG_Y		= this.REG_Y_NEW;
+			this.REG_STATUS	= this.REG_STATUS_NEW;
+			this.REG_PC		= this.REG_PC_NEW;
+
+			this.F_CARRY 	= this.F_CARRY_NEW;
+			this.F_ZERO 	= (this.F_ZERO_NEW==0?1:0);
+			this.F_INTERRUPT= this.F_INTERRUPT_NEW;
+			this.F_DECIMAL 	= this.F_DECIMAL_NEW;
+			this.F_NOTUSED	= this.F_NOTUSED_NEW;
+			this.F_BRK		= this.F_BRK_NEW;
+			this.F_OVERFLOW	= this.F_OVERFLOW_NEW;
+			this.F_SIGN 	= this.F_SIGN_NEW;
+
+			this.opinf		= 0;
+			this.opaddr		= 0;
+			this.addrMode	= 0;
+			this.addr		= 0;
+			this.palCnt		= 0;
+
+			this.palEmu			= Globals.palEmulation;
+			this.emulateSound	= Globals.enableSound;
+			this.stopRunning	= false;
+			
+			this.thread = new PseudoThread(this.nes.getGui().getStage(), this.loop, null, 'CPU');
+			this.thread.addEventListener(Event.COMPLETE, onLoopComplete);
 		}
 	
 		public	function endExcution():void
@@ -206,61 +238,6 @@ package com.mobswing.model
 			return (this.thread!=null && this.thread.isAlive());
 		}
 	
-		public	function run():void
-		{
-			initRun();
-			emulate();
-		}
-	
-		public	function initRun():void
-		{
-			this.stopRunning = false;
-		}
-		
-		public	function emulate():void
-		{
-			// NES Memory
-			// (when memory mappers switch ROM banks
-			// this will be written to, no need to
-			// update reference):
-			this.mem = this.nes.getCpuMemory().mem;
-	
-			// References to other parts of NES:
-			this.ppu		= this.nes.getPpu();
-			this.papu		= this.nes.getPapu();
-
-			// Registers:
-			this.REG_ACC	= this.REG_ACC_NEW;
-			this.REG_X		= this.REG_X_NEW;
-			this.REG_Y		= this.REG_Y_NEW;
-			this.REG_STATUS	= this.REG_STATUS_NEW;
-			this.REG_PC		= this.REG_PC_NEW;
-
-			// Status flags:
-			this.F_CARRY 	= this.F_CARRY_NEW;
-			this.F_ZERO 	= (this.F_ZERO_NEW==0?1:0);
-			this.F_INTERRUPT= this.F_INTERRUPT_NEW;
-			this.F_DECIMAL 	= this.F_DECIMAL_NEW;
-			this.F_NOTUSED	= this.F_NOTUSED_NEW;
-			this.F_BRK		= this.F_BRK_NEW;
-			this.F_OVERFLOW	= this.F_OVERFLOW_NEW;
-			this.F_SIGN 	= this.F_SIGN_NEW;
-
-			// Misc. variables
-			this.opinf		= 0;
-			this.opaddr		= 0;
-			this.addrMode	= 0;
-			this.addr		= 0;
-			this.palCnt		= 0;
-
-			this.palEmu			= Globals.palEmulation;
-			this.emulateSound	= Globals.enableSound;
-			this.stopRunning	= false;
-			
-			this.thread = new PseudoThread(this.nes.getGui().getStage(), this.loop, null, 'CPU');
-			this.thread.addEventListener(Event.COMPLETE, onLoopComplete);
-		}
-		
 		private function loop(obj:Object):Boolean
 		{
 			if (stopRunning)
@@ -1027,7 +1004,6 @@ package com.mobswing.model
 			{
 				if (type == IRQ_NORMAL)
 					return;
-				//trace("too fast irqs. type="+type);
 			}
 			this.irqRequested = true;
 			this.irqType = type;
@@ -1059,7 +1035,7 @@ package com.mobswing.model
 	
 		public	function haltCycles(cycles:int):void
 		{
-//			this.cyclesToHalt += cycles;
+			this.cyclesToHalt += cycles;
 		}
 	
 		private	function doNonMaskableInterrupt(status:int):void
