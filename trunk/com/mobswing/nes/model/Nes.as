@@ -1,8 +1,8 @@
-package com.mobswing.model
+package com.mobswing.nes.model
 {
-	import com.mobswing.control.GameGenie;
-	import com.mobswing.control.IInputHandler;
-	import com.mobswing.control.IUI;
+	import com.mobswing.nes.control.GameGenie;
+	import com.mobswing.nes.control.IInputHandler;
+	import com.mobswing.nes.control.IUI;
 	
 	public class Nes
 	{

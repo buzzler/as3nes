@@ -1,8 +1,8 @@
-package com.mobswing.control
+package com.mobswing.nes.control
 {
 	import __AS3__.vec.Vector;
 	
-	import com.mobswing.model.Nes;
+	import com.mobswing.nes.model.Nes;
 	
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;

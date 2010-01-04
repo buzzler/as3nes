@@ -1,4 +1,4 @@
-package com.mobswing.model
+package com.mobswing.nes.model
 {
 	import flash.utils.ByteArray;
 	

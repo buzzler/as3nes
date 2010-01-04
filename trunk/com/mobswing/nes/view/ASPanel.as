@@ -1,7 +1,7 @@
-package com.mobswing.view
+package com.mobswing.nes.view
 {
-	import com.mobswing.control.KbInputHandler;
-	import com.mobswing.model.Globals;
+	import com.mobswing.nes.control.KbInputHandler;
+	import com.mobswing.nes.model.Globals;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;

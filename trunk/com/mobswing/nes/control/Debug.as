@@ -1,4 +1,4 @@
-package com.mobswing.control
+package com.mobswing.nes.control
 {
 	import flash.utils.getTimer;
 	public class Debug

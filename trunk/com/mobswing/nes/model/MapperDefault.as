@@ -1,10 +1,10 @@
-package com.mobswing.model
+package com.mobswing.nes.model
 {
 	import __AS3__.vec.Vector;
 	
-	import com.mobswing.control.GameGenie;
-	import com.mobswing.control.IInputHandler;
-	import com.mobswing.control.KbInputHandler;
+	import com.mobswing.nes.control.GameGenie;
+	import com.mobswing.nes.control.IInputHandler;
+	import com.mobswing.nes.control.KbInputHandler;
 	
 	public class MapperDefault implements IMemoryMapper
 	{

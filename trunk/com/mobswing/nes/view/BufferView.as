@@ -1,9 +1,9 @@
-package com.mobswing.view
+package com.mobswing.nes.view
 {
 	import __AS3__.vec.Vector;
 	
-	import com.mobswing.model.Globals;
-	import com.mobswing.model.Nes;
+	import com.mobswing.nes.model.Globals;
+	import com.mobswing.nes.model.Nes;
 	
 	import flash.display.BitmapData;
 	import flash.utils.getTimer;
