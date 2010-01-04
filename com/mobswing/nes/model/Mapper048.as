@@ -1,4 +1,4 @@
-package com.mobswing.model
+package com.mobswing.nes.model
 {
 	public class Mapper048 extends MapperDefault
 	{

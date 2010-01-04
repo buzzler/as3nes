@@ -1,4 +1,4 @@
-package com.mobswing.control
+package com.mobswing.nes.control
 {
 	public interface IInputHandler
 	{

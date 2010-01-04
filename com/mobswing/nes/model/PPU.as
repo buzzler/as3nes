@@ -1,10 +1,10 @@
 
-package com.mobswing.model
+package com.mobswing.nes.model
 {
 	import __AS3__.vec.Vector;
 	
-	import com.mobswing.control.Debug;
-	import com.mobswing.view.BufferView;
+	import com.mobswing.nes.control.Debug;
+	import com.mobswing.nes.view.BufferView;
 
 	public class PPU
 	{

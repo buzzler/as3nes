@@ -1,14 +1,14 @@
-package com.mobswing.view
+package com.mobswing.nes.view
 {
-	import com.mobswing.control.IInputHandler;
-	import com.mobswing.control.IUI;
-	import com.mobswing.control.KbInputHandler;
-	import com.mobswing.model.BootInfo;
-	import com.mobswing.model.Cartridge;
-	import com.mobswing.model.Globals;
-	import com.mobswing.model.HiResTimer;
-	import com.mobswing.model.Joystick;
-	import com.mobswing.model.Nes;
+	import com.mobswing.nes.control.IInputHandler;
+	import com.mobswing.nes.control.IUI;
+	import com.mobswing.nes.control.KbInputHandler;
+	import com.mobswing.nes.model.BootInfo;
+	import com.mobswing.nes.model.Cartridge;
+	import com.mobswing.nes.model.Globals;
+	import com.mobswing.nes.model.HiResTimer;
+	import com.mobswing.nes.model.Joystick;
+	import com.mobswing.nes.model.Nes;
 	
 	import flash.display.Sprite;
 	import flash.display.Stage;

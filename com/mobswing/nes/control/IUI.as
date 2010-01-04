@@ -1,8 +1,8 @@
-package com.mobswing.control
+package com.mobswing.nes.control
 {
-	import com.mobswing.model.Joystick;
-	import com.mobswing.model.Nes;
-	import com.mobswing.view.BufferView;
+	import com.mobswing.nes.model.Joystick;
+	import com.mobswing.nes.model.Nes;
+	import com.mobswing.nes.view.BufferView;
 	
 	import flash.display.Stage;
 	
